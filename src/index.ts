@@ -1961,14 +1961,14 @@ function registerTools(server: McpServer): void {
     safeTool(async () => ({ ok: true, selected: await selectAppserviceContext(force), targets: await getTargets(), contexts: cdp.getRuntimeContexts() }))
   );
 
-  server.registerTool("cdp_call", { description: "Call an arbitrary CDP method. Supports flatten sessionId.", inputSchema: { method: z.string().min(1), params: z.record(z.unknown()).optional().default({}), sessionId: z.string().optional() } }, async ({ method, params, sessionId }) =>
+  server.registerTool("cdp_call", { description: "Call an arbitrary CDP method. Supports flatten sessionId.", inputSchema: { method: z.string().min(1), params: z.record(z.string(), z.unknown()).optional().default({}), sessionId: z.string().optional() } }, async ({ method, params, sessionId }) =>
     safeTool(async () => {
       requireCdpConnected();
       return { ok: true, method, sessionId, result: await cdp.send(method, params, DEFAULT_MAX_LENGTH, sessionId) };
     })
   );
 
-  server.registerTool("cdp_call_target", { description: "Attach to targetId with flatten=true and call a CDP method in that session.", inputSchema: { targetId: z.string().min(1), method: z.string().min(1), params: z.record(z.unknown()).optional().default({}) } }, async ({ targetId, method, params }) =>
+  server.registerTool("cdp_call_target", { description: "Attach to targetId with flatten=true and call a CDP method in that session.", inputSchema: { targetId: z.string().min(1), method: z.string().min(1), params: z.record(z.string(), z.unknown()).optional().default({}) } }, async ({ targetId, method, params }) =>
     safeTool(async () => {
       requireCdpConnected();
       const sessionId = await attachToTarget(targetId);
